@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>D:\Desenvolvimento\Projetos\posfix-tradutor\main.c</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="generator" content="SynEdit HTML exporter" />
+<style type="text/css">
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.cpp1-assembler { color: #0000FF; }
+.cpp1-character { color: #000000; }
+.cpp1-comment { color: #3399FF; font-style: italic; }
+.cpp1-float { color: #800080; }
+.cpp1-hexadecimal { color: #800080; }
+.cpp1-identifier { color: #000000; }
+.cpp1-illegalchar { color: #000000; }
+.cpp1-number { color: #800080; }
+.cpp1-octal { color: #800080; }
+.cpp1-preprocessor { background-color: #FFFFFF; color: #008000; font-weight: bold; }
+.cpp1-reservedword { background-color: #FFFFFF; color: #000080; font-weight: bold; }
+.cpp1-space { background-color: #FFFFFF; color: #000000; }
+.cpp1-string { background-color: #FFFFFF; color: #FF0000; font-style: italic; }
+.cpp1-symbol { background-color: #FFFFFF; color: #000000; }
+-->
+</style>
+</head>
+<body>
+<pre>
+<code><span style="font: 12pt Consolas;"><span class="cpp1-comment">/* importa&ccedil;&atilde;o de bibliotecas basicas */</span><span class="cpp1-space"> 
+</span><span class="cpp1-preprocessor">#include &lt;conio.h&gt;
+#include &lt;stdio.h&gt;
+
+</span><span class="cpp1-comment">/* importa&ccedil;&atilde;o da biblioteca que implementa o tradutor */</span><span class="cpp1-space"> 
+</span><span class="cpp1-preprocessor">#include &quot;posfix-tradutor.h&quot;
+
+
+</span><span class="cpp1-comment">/* Defini&ccedil;&atilde;o dos prorotipos das fun&ccedil;&otilde;es auxiliares */
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> cabecalho(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+
+</span><span class="cpp1-comment">/* Fun&ccedil;&atilde;o Principal */
+</span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> main(</span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> argc, </span><span class="cpp1-reservedword">char</span><span class="cpp1-space"> *argv[]) {
+
+    CAMINHO caminhoArquivo;
+
+    cabecalho(); 	</span><span class="cpp1-comment">/* exibe um cabe&ccedil;alho com informa&ccedil;&otilde;es do projeto */
+</span><span class="cpp1-space">                    
+    traduzir();	    </span><span class="cpp1-comment">/* Fun&ccedil;&atilde;o do tradutor que inicia o processo */
+</span><span class="cpp1-space">                    </span><span class="cpp1-comment">/* de tradu&ccedil;&atilde;o;                             */
+</span><span class="cpp1-space">    
+	finalizar();    </span><span class="cpp1-comment">/* Fun&ccedil;&atilde;o do tradutor que finaliza o processo   */
+</span><span class="cpp1-space">                    </span><span class="cpp1-comment">/* de tradu&ccedil;&atilde;o fechando os arquivos utilizados; */
+</span><span class="cpp1-space">    
+    aguardar(CONTINUE);
+	</span><span class="cpp1-reservedword">return</span><span class="cpp1-space"> </span><span class="cpp1-number">0</span><span class="cpp1-symbol">;
+}
+
+</span><span class="cpp1-comment">/* Implementa&ccedil;&atilde;o das fun&ccedil;&otilde;es auxiliares */
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> cabecalho(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {     
+     printf(</span><span class="cpp1-string">&quot;\n\tAutarquia Educacional do Vale do Sao Francisco - AEVSF&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\tFaculdade de Ciencias Aplicadas e Sociais de Petrolina - FACAPE&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\tCurso de Ciencia da Computacao&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\tDisciplina: COMPILADORES\t\tSemestre: 2014.2&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\tProf. SERGIO FAUSTINO RIBEIRO&quot;</span><span class="cpp1-symbol">);    
+     printf(</span><span class="cpp1-string">&quot;\n\tEquipe:&quot;</span><span class="cpp1-symbol">);     
+     printf(</span><span class="cpp1-string">&quot;\n\t\tANDERSON;&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\tDJALMO;&quot;</span><span class="cpp1-symbol">);     
+     printf(</span><span class="cpp1-string">&quot;\n\t\tESDRAS;&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\tLUIZ MARIO;&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\n\tDescricao:&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\tO projeto consiste na criacao de uma biblioteca C que&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\timplementa um tradutor simples capaz de reconhecer&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\talgumas expressoes na forma infixa e as traduzir para&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\ta forma pos-fixa, obedecendo a expecificacao abaixo:\n&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\tCMD   --&gt; ID    =  EXPR&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\tEXPR  --&gt; EXPR  +  TERMO&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\tTERMO --&gt; TERMO *  FATOR&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\tFATOR --&gt; ID\t\t[a-z | A-Z]&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\t\t| NUM\t\t[0...9]&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\t\t| (EXPR)&quot;</span><span class="cpp1-symbol">);
+     printf(</span><span class="cpp1-string">&quot;\n\t\t\t| -FATOR&quot;</span><span class="cpp1-symbol">);
+     aguardar(CONTINUE);
+}
+
+
+</span></span>
+</code></pre>
+</body>
+</html>

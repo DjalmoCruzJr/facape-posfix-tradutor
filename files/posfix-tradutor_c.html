@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>D:\Desenvolvimento\Projetos\posfix-tradutor\posfix-tradutor.c</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="generator" content="SynEdit HTML exporter" />
+<style type="text/css">
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.cpp1-assembler { color: #0000FF; }
+.cpp1-character { color: #000000; }
+.cpp1-comment { color: #3399FF; font-style: italic; }
+.cpp1-float { color: #800080; }
+.cpp1-hexadecimal { color: #800080; }
+.cpp1-identifier { color: #000000; }
+.cpp1-illegalchar { color: #000000; }
+.cpp1-number { color: #800080; }
+.cpp1-octal { color: #800080; }
+.cpp1-preprocessor { background-color: #FFFFFF; color: #008000; font-weight: bold; }
+.cpp1-reservedword { background-color: #FFFFFF; color: #000080; font-weight: bold; }
+.cpp1-space { background-color: #FFFFFF; color: #000000; }
+.cpp1-string { background-color: #FFFFFF; color: #FF0000; font-style: italic; }
+.cpp1-symbol { background-color: #FFFFFF; color: #000000; }
+-->
+</style>
+</head>
+<body>
+<pre>
+<code><span style="font: 12pt Consolas;"><span class="cpp1-preprocessor">#include &lt;conio.h&gt;
+#include &lt;ctype.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#include &quot;posfix-tradutor.h&quot;
+
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+/*---------------DEFINICAO DE VARIAVEIS---------------*/
+/*----------------------------------------------------*/
+</span><span class="cpp1-identifier">FILE    *arquivoDeEntrada;
+FILE    *arquivoDeSaida;
+CAMINHO caminhoArquivo;
+
+TabelaDeSimbolos tabelaSimbolos;
+
+Token   lookahead;
+
+Token   abrePar;
+Token   fechaPar;
+Token   pontoVirgula;
+
+</span><span class="cpp1-reservedword">int</span><span class="cpp1-space">     contadorDeLinha;
+</span><span class="cpp1-reservedword">int</span><span class="cpp1-space">     contadorDeColuna;
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+/*-----------------------FIM--------------------------*/
+/*----------------------------------------------------*/
+
+
+
+/*----------------------------------------------------*/
+/*-------------IMPLEMENTACAO DAS FUNCOES--------------*/
+/*----------------------------------------------------*/
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> inicializar(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {	
+	carregarArquivo(</span><span class="cpp1-string">&quot;entrada.txt&quot;</span><span class="cpp1-symbol">);
+
+	lookahead.token          = NONE;
+	lookahead.atributo       = ESPACO_BRANCO;
+	strcpy(lookahead.lexema, VAZIO);
+	tabelaSimbolos.qtdTokens = </span><span class="cpp1-number">0</span><span class="cpp1-symbol">;
+	tabelaSimbolos.qtdIds    = </span><span class="cpp1-number">0</span><span class="cpp1-symbol">;
+	tabelaSimbolos.qtdNums   = </span><span class="cpp1-number">0</span><span class="cpp1-symbol">;
+	contadorDeLinha          = </span><span class="cpp1-number">1</span><span class="cpp1-symbol">;
+	contadorDeColuna         = </span><span class="cpp1-number">0</span><span class="cpp1-symbol">;
+
+	abrePar.token          = ABRE_PAR;
+	abrePar.atributo       = ESPACO_BRANCO;
+	strcpy(abrePar.lexema, VAZIO);
+	
+	fechaPar.token          = FECHA_PAR;
+	fechaPar.atributo       = ESPACO_BRANCO;
+	strcpy(fechaPar.lexema, VAZIO);
+	
+	pontoVirgula.token          = PONTO_E_VIRGULA;
+	pontoVirgula.atributo       = ESPACO_BRANCO;
+	strcpy(pontoVirgula.lexema, VAZIO);
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> carregarArquivo(CAMINHO c) {
+	printf(</span><span class="cpp1-string">&quot;\nCarregando o arquivo de entrada...&quot;</span><span class="cpp1-symbol">);	
+	arquivoDeEntrada = fopen(</span><span class="cpp1-string">&quot;entrada.txt&quot;</span><span class="cpp1-symbol">, </span><span class="cpp1-string">&quot;r&quot;</span><span class="cpp1-symbol">);
+	</span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(arquivoDeEntrada == NULL) {
+		printf(</span><span class="cpp1-string">&quot;\nERRO AO TENTAR ABRIR O ARQUIVO DE ENTRADA!&quot;</span><span class="cpp1-symbol">);
+        printf(</span><span class="cpp1-string">&quot;\ncrie o arquivo 'entrada.txt' no diretorio do programa!&quot;</span><span class="cpp1-symbol">);
+		aguardar(SAIDA);
+	}
+	printf(</span><span class="cpp1-string">&quot;\nArquivo carregado com sucesso!&quot;</span><span class="cpp1-symbol">);
+	
+	printf(</span><span class="cpp1-string">&quot;\n\nCarregando o arquivo de saida...&quot;</span><span class="cpp1-symbol">);	
+	arquivoDeSaida= fopen(</span><span class="cpp1-string">&quot;SAIDA.txt&quot;</span><span class="cpp1-symbol">, </span><span class="cpp1-string">&quot;a+&quot;</span><span class="cpp1-symbol">);
+	</span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(arquivoDeSaida == NULL) {
+		printf(</span><span class="cpp1-string">&quot;\nERRO AO TENTAR ARBIR O ARQUIVO DE SAIDA!&quot;</span><span class="cpp1-symbol">);
+		aguardar(SAIDA);
+	}	
+	printf(</span><span class="cpp1-string">&quot;\nArquivo carregado com sucesso!&quot;</span><span class="cpp1-symbol">);
+	aguardar(CONTINUE);
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> finalizar(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {
+    fclose(arquivoDeEntrada);     
+    fclose(arquivoDeSaida);
+    
+    printf(</span><span class="cpp1-string">&quot;\nO arquivo 'SAIDA.txt' contendo os resultados da traducao&quot;</span><span class="cpp1-symbol">);
+    printf(</span><span class="cpp1-string">&quot;\nfoi gerado no mesmo diretorio do programa. VERIFIQUE!&quot;</span><span class="cpp1-symbol">);
+    aguardar(SAIDA);
+}
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+</span><span class="cpp1-identifier">Token analiseLexica(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {
+    Token t;
+    </span><span class="cpp1-reservedword">int</span><span class="cpp1-space">   p;    
+    </span><span class="cpp1-reservedword">char</span><span class="cpp1-space">  c;
+    </span><span class="cpp1-reservedword">for</span><span class="cpp1-symbol">(;;) {
+    	c = getc(arquivoDeEntrada);
+	    contadorDeColuna++;
+	    </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(c == EOF)
+	         erro(</span><span class="cpp1-string">&quot;ERRO! O ARQUIVO CHEGOU AO FINAL.&quot;</span><span class="cpp1-symbol">);
+	    </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(c == ESPACO_BRANCO || c == TABULACAO)
+	         </span><span class="cpp1-reservedword">continue</span><span class="cpp1-symbol">;
+	    </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(c == QUEBRA_LINHA) {
+	    	 c = getc(arquivoDeEntrada);
+	    	 contadorDeLinha++;
+	    }</span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(isdigit(c)) {
+	         t.token    = NUM;
+	         t.atributo = c;
+	         strcpy(t.lexema, VAZIO);
+	    } </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(isalpha(c)) { </span><span class="cpp1-comment">/* eh um ID (identificador de variavel) */
+</span><span class="cpp1-space">	         t.token    = ID;
+	         t.atributo = tabelaSimbolos.qtdIds+</span><span class="cpp1-number">1</span><span class="cpp1-symbol">;             
+	         p = </span><span class="cpp1-number">0</span><span class="cpp1-symbol">;
+	         </span><span class="cpp1-reservedword">while</span><span class="cpp1-symbol">(isalnum(c)) {
+	            t.lexema[p] = c;
+	            c  = getc(arquivoDeEntrada);
+	            p++;
+	            </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(p &gt;= MAX_LEXEMA)
+	                 erro(</span><span class="cpp1-string">&quot;ERRO! TAMANHO DO LEXEMA NAO SUPORTADO!&quot;</span><span class="cpp1-symbol">);
+	         }   
+			 ungetc(c, arquivoDeEntrada);
+	    } </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> { </span><span class="cpp1-comment">/* eh um operador */
+</span><span class="cpp1-space">	    	t.token    = c;
+	    	t.atributo = ESPACO_BRANCO; 
+	    	strcpy(t.lexema, VAZIO);
+	    }		            
+	    inserir(t);         
+	    </span><span class="cpp1-reservedword">return</span><span class="cpp1-space"> t;
+	}
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> inserir(Token t) {
+    tabelaSimbolos.qtdTokens++;
+    </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(t.token == ID)  tabelaSimbolos.qtdIds++;
+    </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(t.token == NUM) tabelaSimbolos.qtdNums++;
+    tabelaSimbolos.simbolos[tabelaSimbolos.qtdTokens].token = t.token;
+    tabelaSimbolos.simbolos[tabelaSimbolos.qtdTokens].atributo = t.atributo;
+    strcpy(tabelaSimbolos.simbolos[tabelaSimbolos.qtdTokens].lexema, t.lexema);
+}
+
+</span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> buscar(Token t) {
+    </span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> i;
+    </span><span class="cpp1-reservedword">for</span><span class="cpp1-symbol">(i = </span><span class="cpp1-number">0</span><span class="cpp1-symbol">; i &lt;= tabelaSimbolos.qtdTokens; i++) {
+        </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">((tabelaSimbolos.simbolos[i].token == t.token) &amp;&amp;
+           (tabelaSimbolos.simbolos[i].atributo == t.atributo) &amp;&amp;
+           (strcmp(tabelaSimbolos.simbolos[i].lexema, t.lexema) == </span><span class="cpp1-number">0</span><span class="cpp1-symbol">)
+          ) </span><span class="cpp1-reservedword">return</span><span class="cpp1-space"> i;           
+    }
+    </span><span class="cpp1-reservedword">return</span><span class="cpp1-space"> NONE;  
+}
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> traduzir(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {
+     inicializar();     
+     lookahead = analiseLexica();     
+     cmd();
+     finalizar();
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> cmd() {
+    imprimir(ID);
+	reconhecer(ID);    
+    reconhecer(ATR);
+    expr();
+    imprimir(ATR);
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> expr(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {
+	termo();
+	R1();
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> R1() {
+	</span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(lookahead.token == ADD) {
+		reconhecer(ADD);
+		termo();
+		imprimir(ADD);
+		R1();
+	}
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> termo(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {
+	fator();
+	R2();
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> R2() {
+	</span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(lookahead.token == MUL) {
+		reconhecer(MUL);
+		fator();
+		imprimir(MUL);
+		R2();
+	}
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> fator(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">) {
+	</span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(lookahead.token == ID) {
+		   imprimir(ID);
+		   reconhecer(ID);		   
+	} </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(lookahead.token == NUM) {
+		   imprimir(NUM);
+		   reconhecer(NUM);		   
+	} </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(lookahead.token ==  ABRE_PAR) {
+		   reconhecer(ABRE_PAR);
+		   expr();
+		   reconhecer(FECHA_PAR);
+	} </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(lookahead.token == SUB) {
+		   reconhecer(SUB);
+		   fator();
+		   imprimir(SUB);
+	} </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> erro(</span><span class="cpp1-string">&quot;OCORREU UM ERRO DE SINTAXE!\n&quot;</span><span class="cpp1-symbol">);
+}
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> reconhecer(TOKEN t) {
+     </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(lookahead.token == t) 
+         lookahead = analiseLexica();
+     </span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> 
+         erro(</span><span class="cpp1-string">&quot;OCORREU UM ERRO DE SINTAXE!\n&quot;</span><span class="cpp1-symbol">);
+}
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> imprimir(TOKEN t) {
+     </span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> p;
+     </span><span class="cpp1-reservedword">switch</span><span class="cpp1-symbol">(t) {
+          </span><span class="cpp1-reservedword">case</span><span class="cpp1-space"> ADD:
+          </span><span class="cpp1-reservedword">case</span><span class="cpp1-space"> SUB:
+          </span><span class="cpp1-reservedword">case</span><span class="cpp1-space"> MUL:
+          </span><span class="cpp1-reservedword">case</span><span class="cpp1-space"> DIV:
+          </span><span class="cpp1-reservedword">case</span><span class="cpp1-space"> ATR:
+               fprintf(arquivoDeSaida, </span><span class="cpp1-string">&quot;%c&quot;</span><span class="cpp1-symbol">, t);
+               printf(</span><span class="cpp1-string">&quot;%c&quot;</span><span class="cpp1-symbol">, t);
+               </span><span class="cpp1-reservedword">break</span><span class="cpp1-symbol">;  
+          </span><span class="cpp1-reservedword">case</span><span class="cpp1-space"> NUM:                
+               fprintf(arquivoDeSaida, </span><span class="cpp1-string">&quot;%c&quot;</span><span class="cpp1-symbol">, lookahead.atributo);
+               printf(</span><span class="cpp1-string">&quot;%c&quot;</span><span class="cpp1-symbol">, lookahead.atributo);
+               </span><span class="cpp1-reservedword">break</span><span class="cpp1-symbol">;  
+          </span><span class="cpp1-reservedword">case</span><span class="cpp1-space"> ID:
+               fprintf(arquivoDeSaida, </span><span class="cpp1-string">&quot;%s&quot;</span><span class="cpp1-symbol">, lookahead.lexema);
+               printf(</span><span class="cpp1-string">&quot;%s&quot;</span><span class="cpp1-symbol">, lookahead.lexema);
+               </span><span class="cpp1-reservedword">break</span><span class="cpp1-symbol">;
+          </span><span class="cpp1-reservedword">default</span><span class="cpp1-symbol">: 
+               erro(</span><span class="cpp1-string">&quot;OCORREU UM ERRO DE SINTAXE!&quot;</span><span class="cpp1-symbol">);
+     }
+}
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> erro(MENSAGEM m) {
+    fprintf(arquivoDeSaida, </span><span class="cpp1-string">&quot;\n[LINHA %d, COLUNA %d]: %s\n&quot;</span><span class="cpp1-symbol">, contadorDeLinha, contadorDeColuna, m);
+    printf(</span><span class="cpp1-string">&quot;\n[LINHA %d, COLUNA %d]: %s\n&quot;</span><span class="cpp1-symbol">, contadorDeLinha, contadorDeColuna, m);
+    aguardar(SAIDA);
+}
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> aguardar(</span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> opcao){
+     </span><span class="cpp1-reservedword">if</span><span class="cpp1-symbol">(opcao) {
+         printf(</span><span class="cpp1-string">&quot;\n\nPressione qualquer tecla para continuar...\n\n&quot;</span><span class="cpp1-symbol">);     
+         getch();
+     }</span><span class="cpp1-reservedword">else</span><span class="cpp1-space"> {
+         printf(</span><span class="cpp1-string">&quot;\n\nPressione qualquer tecla para finalizar...\n\n&quot;</span><span class="cpp1-symbol">);          
+         getch();
+         exit(</span><span class="cpp1-number">1</span><span class="cpp1-symbol">);
+     }
+     
+}
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+/*-----------------------FIM--------------------------*/
+/*----------------------------------------------------*/
+</span></span>
+</code></pre>
+</body>
+</html>

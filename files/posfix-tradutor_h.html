@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>D:\Desenvolvimento\Projetos\posfix-tradutor\posfix-tradutor.h</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="generator" content="SynEdit HTML exporter" />
+<style type="text/css">
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.cpp1-assembler { color: #0000FF; }
+.cpp1-character { color: #000000; }
+.cpp1-comment { color: #3399FF; font-style: italic; }
+.cpp1-float { color: #800080; }
+.cpp1-hexadecimal { color: #800080; }
+.cpp1-identifier { color: #000000; }
+.cpp1-illegalchar { color: #000000; }
+.cpp1-number { color: #800080; }
+.cpp1-octal { color: #800080; }
+.cpp1-preprocessor { background-color: #FFFFFF; color: #008000; font-weight: bold; }
+.cpp1-reservedword { background-color: #FFFFFF; color: #000080; font-weight: bold; }
+.cpp1-space { background-color: #FFFFFF; color: #000000; }
+.cpp1-string { background-color: #FFFFFF; color: #FF0000; font-style: italic; }
+.cpp1-symbol { background-color: #FFFFFF; color: #000000; }
+-->
+</style>
+</head>
+<body>
+<pre>
+<code><span style="font: 12pt Consolas;"><span class="cpp1-comment">/*----------------------------------------------------*/
+/*-----------DEFINICAO DE CONTANTES GLOBAIS-----------*/</span><span class="cpp1-space">  
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+</span><span class="cpp1-preprocessor">#define NONE 		    -1
+
+#define TABULACAO 	    '\t'
+#define QUEBRA_LINHA    '\n'
+#define ESPACO_BRANCO   ' '
+#define PONTO_E_VIRGULA ';'
+#define ABRE_PAR        '('
+#define FECHA_PAR       ')'
+
+#define ID 			    0
+#define NUM 		    1
+
+#define ADD			    '+'
+#define SUB 		    '-'
+#define MUL 		    '*'
+#define DIV			    '/'
+#define ATR 		    '='
+
+#define TOKEN           int
+#define LEXEMA          char*
+#define ATRIBUTO        char
+
+#define MENSAGEM        char*
+#define OPCAO           int
+#define CAMINHO         char*
+#define ISOPERADOR      isalnum
+#define VAZIO           &quot;&quot;
+
+#define MAX_LEXEMA      32
+#define MAX_TOKENS      100
+
+#define SAIDA           0
+#define CONTINUE        1
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+/*-----------------------FIM--------------------------*/
+/*----------------------------------------------------*/
+
+
+
+/*----------------------------------------------------*/
+/*----------DEFINICAO DE TIPOS E ESTRUTURAS-----------*/
+/*----------------------------------------------------*/
+</span><span class="cpp1-reservedword">typedef</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">struct</span><span class="cpp1-space"> Token {
+        TOKEN token;
+        LEXEMA lexema[MAX_LEXEMA];
+        ATRIBUTO atributo;
+}Token;
+
+</span><span class="cpp1-reservedword">typedef</span><span class="cpp1-space"> </span><span class="cpp1-reservedword">struct</span><span class="cpp1-space"> TabelaDeSimbolos {
+    Token   simbolos[MAX_TOKENS];
+    </span><span class="cpp1-reservedword">int</span><span class="cpp1-space">     qtdTokens;    
+    </span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> 	qtdIds;
+    </span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> 	qtdNums;
+}TabelaDeSimbolos;
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+/*-----------------------FIM--------------------------*/
+/*----------------------------------------------------*/
+
+
+
+/*----------------------------------------------------*/
+/*----------DEFINICAO DE PROTOTIPOS DE FUNCOES--------*/</span><span class="cpp1-space">  
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> inicializar(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> carregarArquivo(CAMINHO c);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> finalizar(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+
+Token analiseLexica(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> inserir(Token t);
+</span><span class="cpp1-reservedword">int</span><span class="cpp1-space"> buscar(Token t);
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> traduzir(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> cmd();
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> expr(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> R1(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> termo(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> R2(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> fator(</span><span class="cpp1-reservedword">void</span><span class="cpp1-symbol">);
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> reconhecer(TOKEN t);
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> imprimir(TOKEN t);
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> erro(MENSAGEM m);
+
+</span><span class="cpp1-reservedword">void</span><span class="cpp1-space"> aguardar(OPCAO opcao);
+</span><span class="cpp1-comment">/*----------------------------------------------------*/
+/*-----------------------FIM--------------------------*/
+/*----------------------------------------------------*/
+</span></span>
+</code></pre>
+</body>
+</html>
